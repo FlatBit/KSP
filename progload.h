@@ -1,0 +1,1 @@
+void *loadFile(char *path);
