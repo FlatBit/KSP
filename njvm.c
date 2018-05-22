@@ -11,8 +11,6 @@
 
  //Counter & Pointer
  int pc = 0;
- int fp = 0;
-
 
 
  //Zwei Interpreter Listen und Ausfuehrung
@@ -28,7 +26,7 @@ int execute(int IR){
             return 1;
             break;
         case PUSHC:
-            value = IMMEDIATE(IR);
+            value = SIGN_EXTEND(IMMEDIATE(IR));
             setValue(value);
             break;
         case ADD:
@@ -78,16 +76,22 @@ int execute(int IR){
             printf("%c", value);
             break;
         case PUSHG:
+
             break;
         case POPG:
+
             break;
         case ASF:
+            assignSF(IMMEDIATE(IR));
             break;
         case RSF:
+            releaseSF();
             break;
         case PUSHL:
+            pushL(IMMEDIATE(IR));
             break;
         case POPL:
+            popL(IMMEDIATE(IR));
             break;
         default:
             break;
@@ -118,8 +122,7 @@ int printInstruction(int IR){
             return 1;
             break;
         case PUSHC:
-            value = IMMEDIATE(IR);
-            printf("PUSHC \t %d \n", SIGN_EXTEND(value));
+            printf("PUSHC \t %d \n", SIGN_EXTEND(IMMEDIATE(IR)));
             break;
         case ADD:
             printf("ADD \n");
