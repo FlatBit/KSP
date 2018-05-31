@@ -1,12 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "progload.h"
 
+stackMemory stackPointers;
+int numberOfInstructions;
+int numberOfVariables;
 
 void *readInProg(FILE *file){
     char format[4];
     int versionNumber;
-    int numberOfInstructions;
-    int numberOfVariables;
+   
     
     if(fread(format, 1, 4, file) != 4){
         printf("Format konnte nicht einglesen werden \n");
@@ -41,6 +44,7 @@ void *readInProg(FILE *file){
         exit(1);
     }
     printf("Number of Variables: %d \n",numberOfVariables);
+    stackPointers.pVariables = malloc(numberOfVariables * sizeof(int));
 
     if(fread(ptr, 4, numberOfInstructions, file) != numberOfInstructions){
         printf("Konnte Instruktionen nicht einlesen. \n");
@@ -48,15 +52,15 @@ void *readInProg(FILE *file){
     return ptr;
 }
 
-void *loadFile(char *path){
+stackMemory loadFile(char *path){
     FILE *file = fopen(path, "r");
     if(file == NULL){
         printf("Failed to load file");
         exit(1);
     }
-    void *ptr = readInProg(file);
+    stackPointers.pInstruction = readInProg(file);
     fclose(file);
-    return ptr;
+    return stackPointers;
 }
 
 void ags(){
