@@ -9,12 +9,12 @@ int fp = 0;
 
 int v1, v2, value;
 
-int getValue(){
+int pop(){
     sp--;
     return stack[sp];
 }
 
-void setValue(int value){
+void push(int value){
     stack[sp] = value;
     sp++;
 }
@@ -22,26 +22,26 @@ void setValue(int value){
 /****** Stack Operation *******/
 
 void pushC(int value){
-    setValue(value);    
+    push(value);    
 }
 
 void rdInt(){
     fscanf(stdin, "%d", &value);
-    setValue(value);
+    push(value);
 }
 
 void wrInt(){
-    value = getValue();
+    value = pop();
     printf("%d", value);
 }
 
 void rdChr(){
     fscanf(stdin, "%d", &value);
-    setValue(value);
+    push(value);
 }
 
 void wrChr(){
-    value = getValue();
+    value = pop();
     printf("%c", value);
 }
 
@@ -49,38 +49,38 @@ void wrChr(){
 
 
 void add(){
-    v1 = getValue();
-    v2 = getValue();
+    v1 = pop();
+    v2 = pop();
     value = v1 + v2;
-    setValue(value);
+    push(value);
 }
 
 void sub(){
-    v1 = getValue();
-    v2 = getValue();
+    v1 = pop();
+    v2 = pop();
     value = v2 - v1;
-    setValue(value);
+    push(value);
 }
 
 void mul(){
-    v1 = getValue();
-    v2 = getValue();
+    v1 = pop();
+    v2 = pop();
     value = v1 * v2;
-    setValue(value);
+    push(value);
 }
 
 void div(){
-    v1 = getValue();
-    v2 = getValue();
+    v1 = pop();
+    v2 = pop();
     value = v2 / v1;
-    setValue(value);
+    push(value);
 }
 
 void mod(){
-    v1 = getValue();
-    v2 = getValue();
+    v1 = pop();
+    v2 = pop();
     value = v2 % v1;
-    setValue(value);
+    push(value);
 }
 
 
@@ -89,35 +89,89 @@ void mod(){
 // Stack Fram Operations
 void pushL(int index){
     int value = stack[fp + index - 1];
-    setValue(value);
+    push(value);
 }
 
 void popL(int index){
-   stack[fp + index - 1] = getValue();
+   stack[fp + index - 1] = pop();
 }
 
 //Stack Frame Instructions
 void assignSF(int n){
-    setValue(fp);
+    push(fp);
     fp = sp;
     sp = sp + n;
 }
 
 void releaseSF(){
     sp = fp;
-    fp = getValue();
+    fp = pop();
 }
 
 /****StaticDataArea*****/
 
 void pushG(int index){
     if(globalStack && (index >= 0 || index < numberOfInstructions)){
-        setValue(globalStack[index]);
+        push(globalStack[index]);
     }
 }
 
 void popG(int index){
     if(globalStack && (index >= 0 || index < numberOfInstructions)){
-        globalStack[index] = getValue();
+        globalStack[index] = pop();
     }
 }
+
+
+/*****Boolean Operations ****/
+void eq (){
+    v1 = pop();
+    v2 = pop();
+    push((v1 == v2));
+}   
+
+void ne (){
+    v1 = pop();
+    v2 = pop();
+    push((v1 != v2));
+}   
+
+void lt (){
+    v1 = pop();
+    v2 = pop();
+    push((v2 < v1));
+}   
+
+void le (){
+    v1 = pop();
+    v2 = pop();
+    push((v2 <= v1));
+}   
+
+void gt (){
+    v1 = pop();
+    v2 = pop();
+    push((v2 > v1));
+}   
+
+void ge (){
+    v1 = pop();
+    v2 = pop();
+    push((v2 >= v1));
+}   
+
+void jmp (int index){
+    pc = index;
+}   
+
+void brf (int index){
+    if(!pop()){
+        pc = index;
+    }
+}   
+
+void brt (int index){
+    if(pop()){
+        pc = index;
+    }
+} 

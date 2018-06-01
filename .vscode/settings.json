@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "progload.h": "c"
+        "progload.h": "c",
+        "stack.h": "c",
+        "njvm.h": "c"
     }
 }

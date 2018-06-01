@@ -5,6 +5,7 @@
 stackMemory stackPointers;
 int numberOfInstructions;
 int numberOfVariables;
+int version = 3;
 
 void *readInProg(FILE *file){
     char format[4];
@@ -23,6 +24,10 @@ void *readInProg(FILE *file){
     
     if(fread(&versionNumber, 4, 1, file) != 1){
         printf("Konnte Versions Nummer nicht einlesen \n");
+        exit(99);
+    }
+    if(versionNumber != version){
+        printf("Versions Nummer stimmt nicht überein");
         exit(99);
     }
     printf("Version Number: %d \n", versionNumber);

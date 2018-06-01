@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "progload.h"
+#include "debug.h"
 
  //Instruction Regist & Global Stack
  unsigned int *prog;
@@ -37,26 +38,37 @@ int execute(int IR){
         case WRINT: { wrInt();  } break;
         case RDCHR: { rdChr();  } break;
         case WRCHR: { wrChr();  } break;
-        case PUSHG: { pushG(IMMEDIATE(IR));} break;
-        case POPG:  { popG(IMMEDIATE(IR));} break;
-        case ASF:   { assignSF(IMMEDIATE(IR)); break; }
-        case RSF:   { releaseSF(); break; }
-        case PUSHL: { pushL(IMMEDIATE(IR)); break; }
-        case POPL:  { popL(IMMEDIATE(IR)); break; }
+        case PUSHG: { pushG(IMMEDIATE(IR)); }   break;
+        case POPG:  { popG(IMMEDIATE(IR));  }   break;
+        case ASF:   { assignSF(IMMEDIATE(IR));} break;
+        case RSF:   { releaseSF();  }           break;
+        case PUSHL: { pushL(IMMEDIATE(IR)); }   break;
+        case POPL:  { popL(IMMEDIATE(IR));  }   break;
+        case EQ:    { eq();    } break;
+        case NE:    { ne();    } break;
+        case LT:    { lt();    } break;
+        case LE:    { le();    } break;
+        case GT:    { gt();    } break;
+        case GE:    { ge();    } break;
+        case JMP:   { jmp(IMMEDIATE(IR)); }     break;
+        case BRF:   { brf(IMMEDIATE(IR)); }     break;
+        case BRT:   { brt(IMMEDIATE(IR)); }     break;
+
         default: break;
     }
     return 0;
 }
 
+
 void programmInterpreter(){
-        int IR;
-        int halt;
-        pc = 0;
-        do {
+    int IR;
+    int halt;
+    pc = 0;
+    do {
             IR = prog[pc];
             pc = pc + 1;
             halt = execute(IR);
-        } while(!halt);
+    } while(!halt);
 }
 
 int printInstruction(int IR){
@@ -66,23 +78,32 @@ int printInstruction(int IR){
     opCode = IR >> 24;
 
     switch(opCode){
-        case HALT:  { printf("HALT \n"); return 1; } break;
-        case PUSHC: { printf("PUSHC \t %d \n", SIGN_EXTEND(IMMEDIATE(IR))); } break;
-        case ADD:   { printf("ADD \n"); } break;
-        case SUB:   { printf("SUB \n"); } break;
-        case MUL:   { printf("MUL \n"); } break;
-        case DIV:   { printf("DIV \n"); } break;
-        case MOD:   { printf("MOD \n"); } break;
-        case RDINT: { printf("RDINT \n"); } break;
-        case WRINT: { printf("WRINT \n"); } break;
-        case RDCHR: { printf("RDCHR \n"); } break;
-        case WRCHR: { printf("WRCHR \n"); } break;
-        case PUSHG: { printf("PUSHG \t %d \n", IMMEDIATE(IR)); } break;
-        case POPG:  { printf("POPG \t %d \n", IMMEDIATE(IR)); } break;
-        case ASF:   { printf("ASF \t %d \n", IMMEDIATE(IR)); } break;
-        case RSF:   { printf("RSF \n"); } break;
-        case PUSHL: { printf("PUSHL \t %d \n", IMMEDIATE(IR)); } break;
-        case POPL:  { printf("POPL \t %d \n", IMMEDIATE(IR)); } break;
+        case HALT:  { printf("%04d: \t HALT \n", pc); return 1; } break;
+        case PUSHC: { printf("%04d: \t PUSHC \t %d \n", pc, SIGN_EXTEND(IMMEDIATE(IR))); } break;
+        case ADD:   { printf("%04d: \t ADD \n", pc); } break;
+        case SUB:   { printf("%04d: \t SUB \n", pc); } break;
+        case MUL:   { printf("%04d: \t MUL \n", pc); } break;
+        case DIV:   { printf("%04d: \t DIV \n", pc); } break;
+        case MOD:   { printf("%04d: \t MOD \n", pc); } break;
+        case RDINT: { printf("%04d: \t RDINT \n", pc); } break;
+        case WRINT: { printf("%04d: \t WRINT \n", pc); } break;
+        case RDCHR: { printf("%04d: \t RDCHR \n", pc); } break;
+        case WRCHR: { printf("%04d: \t WRCHR \n", pc); } break;
+        case PUSHG: { printf("%04d: \t PUSHG \t %d \n", pc, IMMEDIATE(IR)); }    break;
+        case POPG:  { printf("%04d: \t POPG \t %d \n", pc, IMMEDIATE(IR)); }     break;
+        case ASF:   { printf("%04d: \t ASF \t %d \n", pc, IMMEDIATE(IR)); } break;
+        case RSF:   { printf("%04d: \t RSF \n", pc); } break;
+        case PUSHL: { printf("%04d: \t PUSHL \t %d \n", pc, IMMEDIATE(IR)); } break;
+        case POPL:  { printf("%04d: \t POPL \t %d \n", pc, IMMEDIATE(IR)); } break;
+        case EQ:    { printf("%04d: \t EQ \n", pc); } break;
+        case NE:    { printf("%04d: \t NE \n", pc); } break;
+        case LT:    { printf("%04d: \t LT \n", pc); } break;
+        case LE:    { printf("%04d: \t LE \n", pc); } break;
+        case GT:    { printf("%04d: \t GT \n", pc); } break;
+        case GE:    { printf("%04d: \t GE \n", pc); } break;
+        case JMP:   { printf("%04d: \t JMP \t %d \n", pc,  IMMEDIATE(IR)); } break;
+        case BRF:   { printf("%04d: \t BRF \t %d \n", pc,  IMMEDIATE(IR)); } break;
+        case BRT:   { printf("%04d: \t BRT \t %d \n", pc,  IMMEDIATE(IR)); } break;
         default:    break;
     }
 
@@ -119,7 +140,7 @@ int main(int argc, char* argv[]){
         }
         
         if(!strcmp(argv[i], "--asm")){
-            char *path = "prog1.bin";
+            char *path = "progs/prog6.bin";
             stackMemory stackStruct = loadFile(path);
             if(stackStruct.pInstruction){
                 prog = (unsigned int*)stackStruct.pInstruction;
@@ -127,9 +148,19 @@ int main(int argc, char* argv[]){
             if(stackStruct.pVariables){
                 globalStack = stackStruct.pVariables;
             }
-            listProgramm();
             programmInterpreter();
             // TODO free prog
+        }
+        if(!strcmp(argv[i], "--debug")){
+            char *path = "progs/prog6.bin";
+            stackMemory stackStruct = loadFile(path);
+            if(stackStruct.pInstruction){
+                prog = (unsigned int*)stackStruct.pInstruction;
+            }
+            if(stackStruct.pVariables){
+                globalStack = stackStruct.pVariables;
+            }
+            debugInterpreter();
         }
     }
     
