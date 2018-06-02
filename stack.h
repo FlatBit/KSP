@@ -1,13 +1,15 @@
 #define STACK_SIZE 1000
 
 //Variablen
+int sp;
+int fp;
+int stack[STACK_SIZE];
 
 //Methoden
 int getValue();
 void setValue(int value);
 
 //StackFrame
-
 void pushC(int value);
 void rdInt();
 void wrInt();
@@ -16,7 +18,7 @@ void wrChr();
 void add();
 void sub();
 void mul();
-void div();
+void divS();
 void mod();
 void pushL(int index);
 void popL(int index);

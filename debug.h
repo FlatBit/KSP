@@ -1,4 +1,5 @@
 void debugInterpreter();
+int *breakpoints;
 
 typedef enum DebugState{
     inspect,
@@ -8,3 +9,15 @@ typedef enum DebugState{
     run,
     quit,
 } DebugState;
+
+const static struct {
+    DebugState state;
+    const char *str;
+} conversion [] = {
+    {inspect, "inspect"},
+    {list, "list"},
+    {breakpoint, "breakpoint"},
+    {step, "step"},
+    {run, "run"},
+    {quit, "quit"},
+};

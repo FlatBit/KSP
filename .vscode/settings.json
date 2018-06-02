@@ -2,6 +2,8 @@
     "files.associations": {
         "progload.h": "c",
         "stack.h": "c",
-        "njvm.h": "c"
+        "njvm.h": "c",
+        "stdio.h": "c",
+        "string.h": "c"
     }
 }

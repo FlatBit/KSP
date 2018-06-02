@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "progload.h"
+#include "debug.h"
 
 stackMemory stackPointers;
 int numberOfInstructions;
@@ -16,21 +17,20 @@ void *readInProg(FILE *file){
         printf("Format konnte nicht einglesen werden \n");
         exit(99);
     }
+
     if(!(format[0] == 'N' && format[1] == 'J' && format[2] == 'B' && format[3] == 'F')){
         printf("Format Angabe fehlerhaft \n");
+        exit(99);
     }
-    printf("Format: %c %c %c %c \n", format[0], format[1], format[2], format[3]);
-    
     
     if(fread(&versionNumber, 4, 1, file) != 1){
         printf("Konnte Versions Nummer nicht einlesen \n");
         exit(99);
     }
     if(versionNumber != version){
-        printf("Versions Nummer stimmt nicht überein");
+        printf("Versions Nummer stimmt nicht überein \n");
         exit(99);
     }
-    printf("Version Number: %d \n", versionNumber);
 
     if(fread(&numberOfInstructions, 4, 1, file) != 1){
         printf("Konnte Zahl der Instructionen nicht einlesen \n");
@@ -38,21 +38,22 @@ void *readInProg(FILE *file){
     }
     
     void *ptr = malloc(numberOfInstructions * sizeof(int));
+    breakpoints = calloc(numberOfInstructions, sizeof(int));
     if(ptr == NULL){
         printf("Failed to allocate memory for Instructions \n");
+        exit(99);
     }
     
-    printf("Number of Instruction: %d \n", numberOfInstructions);
     
     if(fread(&numberOfVariables, 4, 1, file) != 1){
         printf("Konnte Zahl der Variablen nicht einlesen. \n");
-        exit(1);
+        exit(99);
     }
-    printf("Number of Variables: %d \n",numberOfVariables);
     stackPointers.pVariables = malloc(numberOfVariables * sizeof(int));
 
     if(fread(ptr, 4, numberOfInstructions, file) != numberOfInstructions){
         printf("Konnte Instruktionen nicht einlesen. \n");
+        exit(99);
     }
     return ptr;
 }
@@ -60,7 +61,7 @@ void *readInProg(FILE *file){
 stackMemory loadFile(char *path){
     FILE *file = fopen(path, "r");
     if(file == NULL){
-        printf("Failed to load file");
+        printf("Error: cannot open code file %s \n", path);
         exit(1);
     }
     stackPointers.pInstruction = readInProg(file);
@@ -68,6 +69,3 @@ stackMemory loadFile(char *path){
     return stackPointers;
 }
 
-void ags(){
-    
-}

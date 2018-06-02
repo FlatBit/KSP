@@ -26,6 +26,7 @@ void pushC(int value){
 }
 
 void rdInt(){
+    printf("Enter Int: \t");
     fscanf(stdin, "%d", &value);
     push(value);
 }
@@ -36,6 +37,7 @@ void wrInt(){
 }
 
 void rdChr(){
+    printf("Enter Char: \t");
     fscanf(stdin, "%d", &value);
     push(value);
 }
@@ -69,7 +71,7 @@ void mul(){
     push(value);
 }
 
-void div(){
+void divS(){
     v1 = pop();
     v2 = pop();
     value = v2 / v1;

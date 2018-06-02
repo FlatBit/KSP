@@ -10,7 +10,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceRoot}/njvm",
-            "args": ["--asm"],
+            "args": ["--debug prog1.bin"],
             "stopAtEntry": false,
             "cwd": "${workspaceRoot}",
             "environment": [],

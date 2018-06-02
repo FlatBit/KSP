@@ -1,17 +1,51 @@
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "stack.h"
 #include "asmdef.h"
-#include <stdio.h>
-#include <string.h>
 #include "progload.h"
 #include "njvm.h"
 #include "debug.h"
 
-
-DebugState state = -1;
 char command [100];
+int *breakpoints;
+int halt = 0;
+int IR;
 
+void showStack(){
+    for(int i = sp; i >= 0; i--){
+        if(i == sp && i == fp){
+            printf("sp, fp \t --->");
+        }else{
+            if(i == sp ){
+                printf("sp");
+            }
+            if(i == fp){
+                printf("fp");
+            }
+            printf("\t --->");
+        }
+        printf("\t%04d:\t %d \n", i, stack[i]);
+    }
+    printf("\t --- bottom of stack --- \n");
+}
 
+void showData(){
+    for(int i = 0; i < numberOfVariables; i++){
+        printf("data[%04d]: \t %d \n", i, globalStack[i]);
+    }
+    printf("\t --- end of data --- \n");
+}
+
+DebugState str2enum (const char *str)
+{
+     int j;
+     for (j = 0;  j < sizeof (conversion) / sizeof (conversion[0]);  ++j)
+         if (!strcmp (str, conversion[j].str))
+             return conversion[j].state;
+    return -1;
+}
 
 void switchStates(DebugState ds){
     switch(ds){
@@ -19,11 +53,11 @@ void switchStates(DebugState ds){
             printf("DEBUG [inspect]: stack, data? \n");
             scanf( "%s", command);
             
-            if (strcmp("stack", command)) {
-                /* code */
+            if (!strcmp("stack", command)) {
+                showStack();
             }
-            else if (strcmp("data", command)){
-                /* code */
+            if (!strcmp("data", command)){
+                showData();
             }
             
         } break;
@@ -34,8 +68,15 @@ void switchStates(DebugState ds){
             printf("DEBUG [breakpoint]: cleared \n");
             printf("DEBUG [breakpoint]: address to set, -1 to clear, <ret> for no change? \n");
             scanf( "%s", command);
+            if (strcmp("cleared", command)){
+                for(int i = 0; i < numberOfInstructions; i++){
+                    breakpoints[i] = 0;
+                }
+            }
+
         } break;
         case step: {
+            halt = execute(IR);
             pc = pc + 1;
         } break;
         case run: {
@@ -43,21 +84,23 @@ void switchStates(DebugState ds){
             scanf( "%s", command);
         } break;
         case quit: {
-            printf("DEBUG []: ");
-            scanf( "%s", command);
+            exit(0);
         } break;
         default: {}
     }
 }
 
+
 void debugInterpreter(){
-        int IR;
-        int halt;
-         
+        DebugState state;
         pc = 0;
-        do {
+        char input[100];
+        while(!halt && !breakpoints[pc]) {
             IR = prog[pc];
+            printInstruction(IR);
+            printf("DEBUG: inspect, list, breakpoint, step, run, quit \n");
+            scanf("%s", input);
+            state = str2enum(input);
             switchStates(state);
-            halt = execute(IR);
-        } while(!halt);
+        }
 }

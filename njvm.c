@@ -17,12 +17,7 @@
  //Zwei Interpreter Listen und Ausfuehrung
 int execute(int IR){
     int opCode;
-    /*
-    int v1;
-    int v2;
-    int value;
-    */
-
+    
     opCode = (IR & 0xFF000000) >> 24;
     switch(opCode){
         case HALT:
@@ -32,7 +27,7 @@ int execute(int IR){
         case ADD:   { add();    } break;
         case SUB:   { sub();    } break;
         case MUL:   { mul();    } break;
-        case DIV:   { div();    } break;
+        case DIV:   { divS();    } break;
         case MOD:   { mod();    } break;
         case RDINT: { rdInt();  } break;
         case WRINT: { wrInt();  } break;
@@ -66,8 +61,8 @@ void programmInterpreter(){
     pc = 0;
     do {
             IR = prog[pc];
-            pc = pc + 1;
             halt = execute(IR);
+            pc = pc + 1;
     } while(!halt);
 }
 
@@ -116,8 +111,8 @@ void listProgramm(){
     pc = 0;
     do {
         IR = prog[pc];
-        pc = pc + 1;
         halt = printInstruction(IR);
+        pc = pc + 1;
     } while(!halt);
 }
 
@@ -127,43 +122,43 @@ int main(int argc, char* argv[]){
     
     int i;
     printf("Ninja Virtual Machine started \n");
+    int debug = 0;
+    int fileSet = 0;
 
     for(i = 0; i < argc; i++){
         if(!strcmp(argv[i], "--version")){
             printf("Ninja Virtual Machine version 0 (compiled %s %s) \n", __DATE__, __TIME__);
             return 0;
-        }
-        if(!strcmp(argv[i], "--help")){
+        }else if(!strcmp(argv[i], "--help")){
             printf("--version \t show version and exit \n");
             printf("--help \t \t show this help and exit \n");
             return 0;
+        }else if(!strcmp(argv[i], "--debug")){
+            debug = 1;
+        }else{
+            if(!fileSet){
+                char *path = argv[i];
+                stackMemory stackStruct = loadFile(path);
+                if(stackStruct.pInstruction && stackStruct.pVariables){
+                    prog = (unsigned int*)stackStruct.pInstruction;
+                    globalStack = stackStruct.pVariables;
+                }else{
+                    printf("Error: more than one code file specified \n");
+                    exit(99);
+                }
+            }else{
+                printf("Error: Failed to initlize Instructions \n");
+                exit(99);
+            }
+            
         }
-        
-        if(!strcmp(argv[i], "--asm")){
-            char *path = "progs/prog6.bin";
-            stackMemory stackStruct = loadFile(path);
-            if(stackStruct.pInstruction){
-                prog = (unsigned int*)stackStruct.pInstruction;
-            }
-            if(stackStruct.pVariables){
-                globalStack = stackStruct.pVariables;
-            }
-            programmInterpreter();
-            // TODO free prog
-        }
-        if(!strcmp(argv[i], "--debug")){
-            char *path = "progs/prog6.bin";
-            stackMemory stackStruct = loadFile(path);
-            if(stackStruct.pInstruction){
-                prog = (unsigned int*)stackStruct.pInstruction;
-            }
-            if(stackStruct.pVariables){
-                globalStack = stackStruct.pVariables;
-            }
-            debugInterpreter();
-        }
+        // TODO free prog
     }
-    
+    if(debug && fileSet){
+        debugInterpreter();
+    }else if(fileSet){
+        programmInterpreter();
+    }
     
     printf("Ninja Virtual stopped \n");
     return 0;
