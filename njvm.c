@@ -64,7 +64,7 @@ int execute(int IR){
 }
 
 
-void programmInterpreter(){
+void programmInterpreter(void){
     int IR;
     int halt;
     pc = 0;
@@ -124,15 +124,16 @@ int printInstruction(int IR){
     return 0;
 }
 
-void listProgramm(){
+void listProgramm(void){
     int IR;
-    int halt;
+    int apc = pc;
     pc = 0;
-    do {
+    while(pc < numberOfInstructions - 1){
         IR = prog[pc];
-        halt = printInstruction(IR);
+        printInstruction(IR);
         pc = pc + 1;
-    } while(!halt);
+    }
+    pc = apc;
 }
 
 

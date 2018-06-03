@@ -5,4 +5,4 @@
  int execute(int IR);
  int printInstruction(int IR);
  unsigned int rRegister;
- void listProgramm();
+ void listProgramm(void);

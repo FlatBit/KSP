@@ -14,7 +14,7 @@ int halt = 0;
 int IR;
 int running = 0;
 
-void showStack(){
+void showStack(void){
     for(int i = sp; i >= 0; i--){
         if(i == sp && i == fp){
             printf("sp, fp \t --->");
@@ -32,7 +32,7 @@ void showStack(){
     printf("\t --- bottom of stack --- \n");
 }
 
-void showData(){
+void showData(void){
     for(int i = 0; i < numberOfVariables; i++){
         printf("data[%04d]: \t %d \n", i, globalStack[i]);
     }
@@ -41,7 +41,7 @@ void showData(){
 
 DebugState checkDebugState (const char *str)
 {
-    for (int i = 0;  i < sizeof (conversion) / sizeof (conversion[0]);  ++i){
+    for (int i = 0;  i < 6);  ++i){
         if (!strcmp (str, conversion[i].str)){
             return conversion[i].state;
         }
@@ -106,7 +106,7 @@ void switchStates(DebugState ds){
 }
 
 
-void debugInterpreter(){
+void debugInterpreter(void){
         DebugState state;
         pc = 0;
         char input[100];

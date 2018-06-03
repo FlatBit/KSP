@@ -1,4 +1,4 @@
-void debugInterpreter();
+void debugInterpreter(void);
 int *breakpoints;
 
 typedef enum DebugState{

@@ -10,7 +10,7 @@ int fp = 0;
 
 int v1, v2, value;
 
-int pop(){
+int pop(void){
     sp--;
     if(sp < 0){
         printf("Error: Stack underflow\n");
@@ -34,24 +34,24 @@ void pushC(int value){
     push(value);    
 }
 
-void rdInt(){
+void rdInt(void){
     printf("Enter Int: \t");
     fscanf(stdin, "%d", &value);
     push(value);
 }
 
-void wrInt(){
+void wrInt(void){
     value = pop();
     printf("%d", value);
 }
 
-void rdChr(){
+void rdChr(void){
     printf("Enter Char: \t");
     fscanf(stdin, "%d", &value);
     push(value);
 }
 
-void wrChr(){
+void wrChr(void){
     value = pop();
     printf("%c", value);
 }
@@ -59,28 +59,28 @@ void wrChr(){
 /***** Math Operations******/
 
 
-void add(){
+void add(void){
     v1 = pop();
     v2 = pop();
     value = v1 + v2;
     push(value);
 }
 
-void sub(){
+void sub(void){
     v1 = pop();
     v2 = pop();
     value = v2 - v1;
     push(value);
 }
 
-void mul(){
+void mul(void){
     v1 = pop();
     v2 = pop();
     value = v1 * v2;
     push(value);
 }
 
-void divS(){
+void divS(void){
     v1 = pop();
     v2 = pop();
     if(v1 == 0){
@@ -91,9 +91,13 @@ void divS(){
     push(value);
 }
 
-void mod(){
+void mod(void){
     v1 = pop();
     v2 = pop();
+    if(v1 == 0){
+        printf("Error: Dibision by zero");
+        exit(99);
+    }
     value = v2 % v1;
     push(value);
 }
@@ -118,7 +122,7 @@ void assignSF(int n){
     sp = sp + n;
 }
 
-void releaseSF(){
+void releaseSF(void){
     sp = fp;
     fp = pop();
 }
@@ -139,37 +143,37 @@ void popG(int index){
 
 
 /*****Boolean Operations ****/
-void eq (){
+void eq (void){
     v1 = pop();
     v2 = pop();
     push((v1 == v2));
 }   
 
-void ne (){
+void ne (void){
     v1 = pop();
     v2 = pop();
     push((v1 != v2));
 }   
 
-void lt (){
+void lt (void){
     v1 = pop();
     v2 = pop();
     push((v2 < v1));
 }   
 
-void le (){
+void le (void){
     v1 = pop();
     v2 = pop();
     push((v2 <= v1));
 }   
 
-void gt (){
+void gt (void){
     v1 = pop();
     v2 = pop();
     push((v2 > v1));
 }   
 
-void ge (){
+void ge (void){
     v1 = pop();
     v2 = pop();
     push((v2 >= v1));
@@ -204,7 +208,7 @@ void call(int target){
     jump = 1;
 }
 
-void ret(){
+void ret(void){
     int target = pop();
     pc = target;
     jump = 1;
@@ -216,17 +220,17 @@ void drop(int n){
     }
 }
 
-void pushr(){
+void pushr(void){
     int value = rRegister;
     push(value);
 } 
 
-void popr(){
+void popr(void){
     int value = pop();
     rRegister = value;
 } 
 
-void dup(){
+void dup(void){
     int value = pop();
     push(value);
     push(value);
