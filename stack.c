@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "stack.h"
 #include "njvm.h"
 #include "progload.h"
@@ -102,12 +103,12 @@ void mod(){
 
 // Stack Fram Operations
 void pushL(int index){
-    int value = stack[fp + index - 1];
+    int value = stack[fp + index ];
     push(value);
 }
 
 void popL(int index){
-   stack[fp + index - 1] = pop();
+   stack[fp + index] = pop();
 }
 
 //Stack Frame Instructions
@@ -226,5 +227,9 @@ void popr(){
 } 
 
 void dup(){
-
+    int value = pop();
+    push(value);
+    push(value);
 } 
+
+

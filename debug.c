@@ -72,17 +72,20 @@ void switchStates(DebugState ds){
                 printf("DEBUG [breakpoint]: set to %d \n", bp);
             }
             printf("DEBUG [breakpoint]: address to set, -1 to clear, <ret> for no change? \n");
-            char *number;
-            if(scanf( "%s", number)){
-                if (!strcmp("-1", number)){
-                    bp = -1;
+            int number;
+            scanf("%d", &number);
+            
+            if (number == -1){
+                bp = -1;
+            }else{
+                if(number >= 0 && number < numberOfInstructions){
+                    bp = number;
+                    printf("DEBUG [breakpoint]: now set at %d \n", number);
                 }else{
-                    int adress = atoi(command);
-                    if(adress >= 0 && adress < numberOfInstructions){
-                        bp = adress;
-                    }
+                    printf("DEBUG [breakpoint]: breakpoint outside of instruction register");
                 }
             }
+            
         } break;
         case step: {
             halt = execute(IR);
@@ -102,13 +105,6 @@ void switchStates(DebugState ds){
     }
 }
 
-void sdfe(){
-    do {
-            IR = prog[pc];
-            halt = execute(IR);
-            
-    } while(!halt);
-}
 
 void debugInterpreter(){
         DebugState state;
@@ -125,11 +121,12 @@ void debugInterpreter(){
                 }
             }else{
                 running = 0;
+                printInstruction(IR);
+                printf("DEBUG: inspect, list, breakpoint, step, run, quit \n");
+                scanf("%s", input);
+                state = checkDebugState(input);
+                switchStates(state);
             }
-            printInstruction(IR);
-            printf("DEBUG: inspect, list, breakpoint, step, run, quit \n");
-            scanf("%s", input);
-            state = checkDebugState(input);
-            switchStates(state);
+            
         }
 }

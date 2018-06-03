@@ -30,10 +30,10 @@
 #define JMP 23      
 #define BRF 24      
 #define BRT 25
-#define call 26
-#define ret 27
-#define drop 28
-#define pushr 29
-#define popr 30
-#define dup 31
+#define CALL 26
+#define RET 27
+#define DROP 28
+#define PUSHR 29
+#define POPR 30
+#define DUP 31
 

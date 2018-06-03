@@ -2,6 +2,7 @@
 #include "stack.h"
 #include "asmdef.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "progload.h"
 #include "debug.h"
@@ -39,8 +40,8 @@ int execute(int IR){
         case POPG:  { popG(IMMEDIATE(IR));  }   break;
         case ASF:   { assignSF(IMMEDIATE(IR));} break;
         case RSF:   { releaseSF();  }           break;
-        case PUSHL: { pushL(IMMEDIATE(IR)); }   break;
-        case POPL:  { popL(IMMEDIATE(IR));  }   break;
+        case PUSHL: { pushL(SIGN_EXTEND(IMMEDIATE(IR))); }   break;
+        case POPL:  { popL(SIGN_EXTEND(IMMEDIATE(IR)));  }   break;
         case EQ:    { eq();    } break;
         case NE:    { ne();    } break;
         case LT:    { lt();    } break;
@@ -50,6 +51,12 @@ int execute(int IR){
         case JMP:   { jmp(IMMEDIATE(IR)); }     break;
         case BRF:   { brf(IMMEDIATE(IR)); }     break;
         case BRT:   { brt(IMMEDIATE(IR)); }     break;
+        case CALL:  { call(IMMEDIATE(IR)); }    break;
+        case RET:   { ret(); }  break;
+        case DROP:  { drop(IMMEDIATE(IR)); }    break;
+        case PUSHR: { pushr();} break;
+        case POPR:  { popr(); } break;
+        case DUP:   { dup(); }  break;
 
         default: break;
     }
@@ -94,8 +101,8 @@ int printInstruction(int IR){
         case POPG:  { printf("%04d: \t POPG \t %d \n", pc, IMMEDIATE(IR)); }     break;
         case ASF:   { printf("%04d: \t ASF \t %d \n", pc, IMMEDIATE(IR)); } break;
         case RSF:   { printf("%04d: \t RSF \n", pc); } break;
-        case PUSHL: { printf("%04d: \t PUSHL \t %d \n", pc, IMMEDIATE(IR)); } break;
-        case POPL:  { printf("%04d: \t POPL \t %d \n", pc, IMMEDIATE(IR)); } break;
+        case PUSHL: { printf("%04d: \t PUSHL \t %d \n", pc, SIGN_EXTEND(IMMEDIATE(IR))); }  break;
+        case POPL:  { printf("%04d: \t POPL \t %d \n", pc, SIGN_EXTEND(IMMEDIATE(IR))); }   break;
         case EQ:    { printf("%04d: \t EQ \n", pc); } break;
         case NE:    { printf("%04d: \t NE \n", pc); } break;
         case LT:    { printf("%04d: \t LT \n", pc); } break;
@@ -105,6 +112,12 @@ int printInstruction(int IR){
         case JMP:   { printf("%04d: \t JMP \t %d \n", pc,  IMMEDIATE(IR)); } break;
         case BRF:   { printf("%04d: \t BRF \t %d \n", pc,  IMMEDIATE(IR)); } break;
         case BRT:   { printf("%04d: \t BRT \t %d \n", pc,  IMMEDIATE(IR)); } break;
+        case CALL:  { printf("%04d: \t CALL \t %d \n", pc, IMMEDIATE(IR)); } break;
+        case RET:   { printf("%04d: \t RET \t \n", pc); } break;   
+        case DROP:  { printf("%04d: \t DROP \t %d \n", pc, IMMEDIATE(IR)); } break;  
+        case PUSHR: { printf("%04d: \t PUSHR \t \n", pc); } break; 
+        case POPR:  { printf("%04d: \t POPR \t \n", pc); } break;  
+        case DUP:   { printf("%04d: \t DUP \t \n", pc); } break;   
         default:    break;
     }
 
