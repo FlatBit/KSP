@@ -9,6 +9,8 @@
  //Instruction Regist & Global Stack
  unsigned int *prog;
  signed int *globalStack;
+ int jump = 0;
+ unsigned int rRegister;
 
  //Counter & Pointer
  int pc = 0;
@@ -62,7 +64,11 @@ void programmInterpreter(){
     do {
             IR = prog[pc];
             halt = execute(IR);
-            pc = pc + 1;
+            if(!jump){
+                pc = pc + 1;
+            }else{
+                jump = 0;
+            }
     } while(!halt);
 }
 
@@ -117,17 +123,19 @@ void listProgramm(){
 }
 
 
-
+// Liest die Kommandozeilen Argumente und benutzt int debug als Flag für den Debug
+// Modus und int fileSet als Flag für eine geladene Datei
 int main(int argc, char* argv[]){
     
-    int i;
     printf("Ninja Virtual Machine started \n");
+    //Flags
     int debug = 0;
     int fileSet = 0;
 
-    for(i = 0; i < argc; i++){
+    // Kommandozeilen Argumente Verarbeiten
+    for(int i = 1; i < argc; i++){
         if(!strcmp(argv[i], "--version")){
-            printf("Ninja Virtual Machine version 0 (compiled %s %s) \n", __DATE__, __TIME__);
+            printf("Ninja Virtual Machine version %d (compiled %s %s) \n", version, __DATE__, __TIME__);
             return 0;
         }else if(!strcmp(argv[i], "--help")){
             printf("--version \t show version and exit \n");
@@ -135,24 +143,26 @@ int main(int argc, char* argv[]){
             return 0;
         }else if(!strcmp(argv[i], "--debug")){
             debug = 1;
-        }else{
+        }else{ 
+            // Uebergebenen Dateipfad einlesen
             if(!fileSet){
                 char *path = argv[i];
                 stackMemory stackStruct = loadFile(path);
                 if(stackStruct.pInstruction && stackStruct.pVariables){
                     prog = (unsigned int*)stackStruct.pInstruction;
                     globalStack = stackStruct.pVariables;
+                    fileSet = 1;
                 }else{
-                    printf("Error: more than one code file specified \n");
+                    printf("Error: Failed to initlize Instructions \n");
                     exit(99);
                 }
             }else{
-                printf("Error: Failed to initlize Instructions \n");
+                printf("Error: more than one code file specified \n");
                 exit(99);
             }
             
         }
-        // TODO free prog
+        printf("%s \n", argv[i]);
     }
     if(debug && fileSet){
         debugInterpreter();

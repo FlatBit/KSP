@@ -1,6 +1,7 @@
 struct stackMemory;
 int numberOfInstructions;
 int numberOfVariables;
+int version;
 
 typedef struct stackMemory stackMemory;
 struct stackMemory{

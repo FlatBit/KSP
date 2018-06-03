@@ -6,7 +6,7 @@
 stackMemory stackPointers;
 int numberOfInstructions;
 int numberOfVariables;
-int version = 3;
+int version = 4;
 
 void *readInProg(FILE *file){
     char format[4];
@@ -38,7 +38,7 @@ void *readInProg(FILE *file){
     }
     
     void *ptr = malloc(numberOfInstructions * sizeof(int));
-    breakpoints = calloc(numberOfInstructions, sizeof(int));
+    //breakpoints = calloc(numberOfInstructions, sizeof(int));
     if(ptr == NULL){
         printf("Failed to allocate memory for Instructions \n");
         exit(99);

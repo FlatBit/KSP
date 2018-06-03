@@ -11,10 +11,18 @@ int v1, v2, value;
 
 int pop(){
     sp--;
+    if(sp < 0){
+        printf("Error: Stack underflow\n");
+        exit(99);
+    }
     return stack[sp];
 }
 
 void push(int value){
+    if(sp >= STACK_SIZE){
+        printf("Error: Stack overflow\n");
+        exit(99);
+    }
     stack[sp] = value;
     sp++;
 }
@@ -74,6 +82,10 @@ void mul(){
 void divS(){
     v1 = pop();
     v2 = pop();
+    if(v1 == 0){
+        printf("Error: Division by zero");
+        exit(99);
+    }
     value = v2 / v1;
     push(value);
 }
@@ -113,13 +125,13 @@ void releaseSF(){
 /****StaticDataArea*****/
 
 void pushG(int index){
-    if(globalStack && (index >= 0 || index < numberOfInstructions)){
+    if(globalStack && (index >= 0 && index < numberOfInstructions)){
         push(globalStack[index]);
     }
 }
 
 void popG(int index){
-    if(globalStack && (index >= 0 || index < numberOfInstructions)){
+    if(globalStack && (index >= 0 && index < numberOfInstructions)){
         globalStack[index] = pop();
     }
 }
@@ -162,18 +174,57 @@ void ge (){
     push((v2 >= v1));
 }   
 
-void jmp (int index){
-    pc = index;
+/******* JUMP Statements *****/
+
+void jmp (int target){
+    jump = 1;
+    pc = target;
 }   
 
-void brf (int index){
+void brf (int target){
     if(!pop()){
-        pc = index;
+        jump = 1;
+        pc = target;
     }
 }   
 
-void brt (int index){
+void brt (int target){
     if(pop()){
-        pc = index;
+        jump = 1;
+        pc = target;
     }
+} 
+
+/****** Instructions Aufgabe 4 ****/
+
+void call(int target){
+    push(pc + 1);
+    pc = target;
+    jump = 1;
+}
+
+void ret(){
+    int target = pop();
+    pc = target;
+    jump = 1;
+} 
+
+void drop(int n){
+    for(int i = 0; i < n; i++){
+        pop();
+    }
+}
+
+void pushr(){
+    int value = rRegister;
+    push(value);
+} 
+
+void popr(){
+    int value = pop();
+    rRegister = value;
+} 
+
+void dup(){
+
 } 

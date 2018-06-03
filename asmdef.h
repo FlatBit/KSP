@@ -29,4 +29,11 @@
 #define GE 22                  
 #define JMP 23      
 #define BRF 24      
-#define BRT 25      
+#define BRT 25
+#define call 26
+#define ret 27
+#define drop 28
+#define pushr 29
+#define popr 30
+#define dup 31
+
