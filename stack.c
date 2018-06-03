@@ -35,7 +35,6 @@ void pushC(int value){
 }
 
 void rdInt(void){
-    printf("Enter Int: \t");
     fscanf(stdin, "%d", &value);
     push(value);
 }
@@ -46,7 +45,6 @@ void wrInt(void){
 }
 
 void rdChr(void){
-    printf("Enter Char: \t");
     fscanf(stdin, "%d", &value);
     push(value);
 }
@@ -84,7 +82,7 @@ void divS(void){
     v1 = pop();
     v2 = pop();
     if(v1 == 0){
-        printf("Error: Division by zero");
+        printf("Error: division by zero\n");
         exit(99);
     }
     value = v2 / v1;
@@ -95,7 +93,7 @@ void mod(void){
     v1 = pop();
     v2 = pop();
     if(v1 == 0){
-        printf("Error: Dibision by zero");
+        printf("Error: division by zero\n");
         exit(99);
     }
     value = v2 % v1;

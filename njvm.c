@@ -141,7 +141,6 @@ void listProgramm(void){
 // Modus und int fileSet als Flag für eine geladene Datei
 int main(int argc, char* argv[]){
     
-    printf("Ninja Virtual Machine started \n");
     //Flags
     int debug = 0;
     int fileSet = 0;
@@ -149,11 +148,11 @@ int main(int argc, char* argv[]){
     // Kommandozeilen Argumente Verarbeiten
     for(int i = 1; i < argc; i++){
         if(!strcmp(argv[i], "--version")){
-            printf("Ninja Virtual Machine version %d (compiled %s %s) \n", version, __DATE__, __TIME__);
+            printf("Ninja Virtual Machine version %d (compiled %s %s)\n", version, __DATE__, __TIME__);
             return 0;
         }else if(!strcmp(argv[i], "--help")){
-            printf("--version \t show version and exit \n");
-            printf("--help \t \t show this help and exit \n");
+            printf("--version \t show version and exit\n");
+            printf("--help \t \t show this help and exit\n");
             return 0;
         }else if(!strcmp(argv[i], "--debug")){
             debug = 1;
@@ -167,23 +166,23 @@ int main(int argc, char* argv[]){
                     globalStack = stackStruct.pVariables;
                     fileSet = 1;
                 }else{
-                    printf("Error: Failed to initlize Instructions \n");
+                    printf("Error: Failed to initlize Instructions\n");
                     exit(99);
                 }
             }else{
-                printf("Error: more than one code file specified \n");
+                printf("Error: more than one code file specified\n");
                 exit(99);
             }
             
         }
-        printf("%s \n", argv[i]);
     }
+    printf("Ninja Virtual Machine started\n");
     if(debug && fileSet){
         debugInterpreter();
     }else if(fileSet){
         programmInterpreter();
     }
     
-    printf("Ninja Virtual stopped \n");
+    printf("Ninja Virtual Machine stopped\n");
     return 0;
 }

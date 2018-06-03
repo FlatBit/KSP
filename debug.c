@@ -41,7 +41,7 @@ void showData(void){
 
 DebugState checkDebugState (const char *str)
 {
-    for (int i = 0;  i < 6);  ++i){
+    for (int i = 0;  i < 6;  ++i){
         if (!strcmp (str, conversion[i].str)){
             return conversion[i].state;
         }

@@ -1,0 +1,19 @@
+Der Debugger besitzt 6 Zustände die sich über die Eingabe deren Bezeichner aufrufen lassen.
+inspect, list, breakpoint, step, run, quit
+Der Debugger lässt sich durch die Flag --debug ausführen.
+1. inspect
+    Mit Inspect können nach weiterer Eingabe entweder der Stack oder die Static Data Area
+    angezeigt werden.
+2. list
+    Zeigt alle Instructionen aus dennen das Programm besteht.
+3. breakpoint
+    Mit breakpoint kann ein Breakpoint aufgerufen werden. Es ist sinnvoll vorher list
+    aufzurufen um zu sehen aus wie vielen Instructions das Programm besteht.
+    Wird -1 übergeben wird der aktuelle Breakpoint gelöscht.
+4. step
+    Geht ein Schritt weiter im Instruction Register
+5. run
+    Läuft bis zum nächsten Programm oder bis zum Ende falls kein Breakpoint gesetzt ist
+6. quit
+    Beendet den Debugger und die Ausführung des übergebenen Programms
+
