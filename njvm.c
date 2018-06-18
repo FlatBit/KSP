@@ -30,7 +30,7 @@ int execute(int IR){
         case ADD:   { add();    } break;
         case SUB:   { sub();    } break;
         case MUL:   { mul();    } break;
-        case DIV:   { divS();    } break;
+        case DIV:   { divS();   } break;
         case MOD:   { mod();    } break;
         case RDINT: { rdInt();  } break;
         case WRINT: { wrInt();  } break;
