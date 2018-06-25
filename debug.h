@@ -2,7 +2,7 @@
 #define DEBUG_H
 
 void debugInterpreter(void);
-int *breakpoints;
+extern int *breakpoints;
 
 typedef enum DebugState{
     inspect,

@@ -14,17 +14,14 @@ typedef struct{
 	} u;
 } StackSlot;
 
-int pc;
-unsigned int *prog;
-ObjRef *globalStack;
-ObjRef rRegister;
+extern int pc;
+extern unsigned int *prog;
+extern ObjRef *globalStack;
+extern ObjRef rRegister;
+extern int jump;
 
- int jump;
- int execute(int IR);
- int printInstruction(int IR);
- void listProgramm(void);
+int execute(int IR);
+int printInstruction(int IR);
+void listProgramm(void);
 
 #endif
-
-
-

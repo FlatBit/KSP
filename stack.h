@@ -5,9 +5,9 @@
 #include "njvm.h"
 
 //Variablen
-int sp;
-int fp;
-StackSlot stack[STACK_SIZE];
+extern int sp;
+extern int fp;
+extern StackSlot stack[STACK_SIZE];
 
 //Methoden
 int getValue();
