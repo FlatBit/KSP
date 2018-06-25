@@ -1,31 +1,63 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "stack.h"
-#include "njvm.h"
 #include "progload.h"
 
-int stack[STACK_SIZE];
+StackSlot stack[STACK_SIZE];
 int sp = 0;
 int fp = 0;
 
 int v1, v2, value;
 
+// Hier StackSlot Unterscheidung
 int pop(void){
     sp--;
     if(sp < 0){
         printf("Error: Stack underflow\n");
         exit(99);
     }
-    return stack[sp];
+    int rValue;
+    StackSlot ss = stack[sp];
+    if(ss.isObjRef == 1){
+        rValue = ss.u.objRef->data[0];
+    }else{
+        rValue = ss.u.number;
+    }
+    return rValue;
 }
 
-void push(int value){
+StackSlot popSS(){
+    sp--;
+    StackSlot ss = stack[sp];
+    return ss;
+}
+
+void pushSS(StackSlot ss){
     if(sp >= STACK_SIZE){
         printf("Error: Stack overflow\n");
         exit(99);
     }
-    stack[sp] = value;
-    sp++;
+    stack[sp] = ss;
+    sp++;   
+}
+
+void push(int value){
+    char data = (char) value;
+    ObjRef obj = malloc(sizeof(ObjRef));
+    obj->data[0] = data;
+    obj->size = sizeof(data);
+    StackSlot ss;
+    ss.isObjRef = 1;
+    ss.u.objRef = obj; 
+    pushSS(ss);
+}
+
+void pushN(int value){
+    char data = (char) value;
+    StackSlot ss;
+    ss.isObjRef = 0;
+    ss.u.number = data; 
+    pushSS(ss);
 }
 
 /****** Stack Operation *******/
@@ -105,17 +137,18 @@ void mod(void){
 
 // Stack Fram Operations
 void pushL(int index){
-    int value = stack[fp + index ];
-    push(value);
+    StackSlot ss = stack[fp + index ];
+    pushSS(ss);
 }
 
+// TODO pop() benötigt ObjRef
 void popL(int index){
-   stack[fp + index] = pop();
+   stack[fp + index] = popSS();
 }
 
 //Stack Frame Instructions
 void assignSF(int n){
-    push(fp);
+    pushN(fp);
     fp = sp;
     sp = sp + n;
 }
@@ -129,13 +162,18 @@ void releaseSF(void){
 
 void pushG(int index){
     if(globalStack && (index >= 0 && index < numberOfInstructions)){
-        push(globalStack[index]);
+        ObjRef value = globalStack[index];
+        StackSlot ss;
+        ss.isObjRef = 1;
+        ss.u.objRef = value;
+        pushSS(ss);
     }
 }
 
+// TODO globalStack speichert auch StackSlots
 void popG(int index){
     if(globalStack && (index >= 0 && index < numberOfInstructions)){
-        globalStack[index] = pop();
+        globalStack[index] = popSS().u.objRef;
     }
 }
 
@@ -201,7 +239,7 @@ void brt (int target){
 /****** Instructions Aufgabe 4 ****/
 
 void call(int target){
-    push(pc + 1);
+    pushN(pc + 1);
     pc = target;
     jump = 1;
 }
@@ -219,13 +257,16 @@ void drop(int n){
 }
 
 void pushr(void){
-    int value = rRegister;
-    push(value);
+    ObjRef value = rRegister;
+    StackSlot ss;
+    ss.isObjRef = 1;
+    ss.u.objRef = value;
+    pushSS(ss);
 } 
 
 void popr(void){
-    int value = pop();
-    rRegister = value;
+    StackSlot value = popSS();
+    rRegister = value.u.objRef;
 } 
 
 void dup(void){

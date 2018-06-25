@@ -3,7 +3,7 @@
 #include "progload.h"
 #include "debug.h"
 
-stackMemory stackPointers;
+StackMemory stackPointers;
 int numberOfInstructions;
 int numberOfVariables;
 int version = 4;
@@ -49,7 +49,7 @@ void *readInProg(FILE *file){
         printf("Konnte Zahl der Variablen nicht einlesen.\n");
         exit(99);
     }
-    stackPointers.pVariables = malloc(numberOfVariables * sizeof(int));
+    stackPointers.pVariables = malloc(numberOfVariables * sizeof(ObjRef));
 
     if(fread(ptr, 4, numberOfInstructions, file) != numberOfInstructions){
         printf("Konnte Instruktionen nicht einlesen.\n");
@@ -58,7 +58,7 @@ void *readInProg(FILE *file){
     return ptr;
 }
 
-stackMemory loadFile(char *path){
+StackMemory loadFile(char *path){
     FILE *file = fopen(path, "r");
     if(file == NULL){
         printf("Error: cannot open code file %s\n", path);

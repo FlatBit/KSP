@@ -1,9 +1,13 @@
+#ifndef STACK_H
+#define STACK_H
+
 #define STACK_SIZE 1000
+#include "njvm.h"
 
 //Variablen
 int sp;
 int fp;
-int stack[STACK_SIZE];
+StackSlot stack[STACK_SIZE];
 
 //Methoden
 int getValue();
@@ -41,3 +45,5 @@ void drop(int n);
 void pushr(void); 
 void popr(void); 
 void dup(void); 
+
+#endif

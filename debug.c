@@ -5,8 +5,8 @@
 #include "stack.h"
 #include "asmdef.h"
 #include "progload.h"
-#include "njvm.h"
 #include "debug.h"
+
 
 char command [100];
 int bp = -1;

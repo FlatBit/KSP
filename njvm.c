@@ -9,9 +9,9 @@
 
  //Instruction Regist & Global Stack
  unsigned int *prog;
- signed int *globalStack;
+ ObjRef *globalStack;
+ ObjRef rRegister;
  int jump = 0;
- unsigned int rRegister;
 
  //Counter & Pointer
  int pc = 0;
@@ -160,7 +160,7 @@ int main(int argc, char* argv[]){
             // Uebergebenen Dateipfad einlesen
             if(!fileSet){
                 char *path = argv[i];
-                stackMemory stackStruct = loadFile(path);
+                StackMemory stackStruct = loadFile(path);
                 if(stackStruct.pInstruction && stackStruct.pVariables){
                     prog = (unsigned int*)stackStruct.pInstruction;
                     globalStack = stackStruct.pVariables;

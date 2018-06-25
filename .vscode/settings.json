@@ -4,6 +4,20 @@
         "stack.h": "c",
         "njvm.h": "c",
         "stdio.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "type_traits": "c",
+        "__bit_reference": "c",
+        "__functional_base": "c",
+        "atomic": "c",
+        "bitset": "c",
+        "chrono": "c",
+        "functional": "c",
+        "iterator": "c",
+        "limits": "c",
+        "locale": "c",
+        "memory": "c",
+        "ratio": "c",
+        "system_error": "c",
+        "tuple": "c"
     }
 }

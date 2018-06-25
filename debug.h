@@ -1,3 +1,6 @@
+#ifndef DEBUG_H
+#define DEBUG_H
+
 void debugInterpreter(void);
 int *breakpoints;
 
@@ -21,3 +24,4 @@ const static struct {
     {run, "run"},
     {quit, "quit"},
 };
+#endif

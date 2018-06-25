@@ -1,12 +1,17 @@
-struct stackMemory;
-int numberOfInstructions;
-int numberOfVariables;
-int version;
+#ifndef PROGLOAD_H
+#define PROGLOAD_H
+#include "njvm.h"
 
-typedef struct stackMemory stackMemory;
-struct stackMemory{
+
+extern int numberOfInstructions;
+extern int numberOfVariables;
+extern int version;
+
+typedef struct {
     void *pInstruction;
-    signed int *pVariables;
-};
+    ObjRef *pVariables;
+} StackMemory;
 
-stackMemory loadFile(char *path);
+StackMemory loadFile(char *path);
+
+#endif
