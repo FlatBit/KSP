@@ -8,4 +8,8 @@ echo "$message"
 # [] range 
 
 chmod +x ref/nja
- ./ref/nja /progs/prog[0-9]*.asm /progs/prog[0-9]*.bin
+
+for file in /progs/*.asm
+do
+    ./ref/nja $file $file.bin
+done
