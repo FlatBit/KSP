@@ -9,8 +9,9 @@ echo "$message"
 # K
 chmod +x ref/nja
 
-for file in /progs/*.asm
+BASEDIR=$(dirname $0)
+count=$(find ./progs -maxdepth 1 -name "*.asm" | wc -l)
+for ((z=1; z<=$count;z++))
 do
-    ./ref/nja $file $file.bin
+    "$BASEDIR"/../ref/nja progs/prog"$z".asm progs/prog"$z".bin
 done
-
