@@ -1,10 +1,13 @@
 #ifndef NJVM_H
 #define NJVM_H
+#include "support.h"
 
+/*
 typedef struct{
     unsigned int size;
     unsigned char data[1];
 } *ObjRef;
+*/
 
 typedef struct{
 	int isObjRef;

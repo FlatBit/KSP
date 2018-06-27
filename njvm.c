@@ -6,6 +6,8 @@
 #include <string.h>
 #include "progload.h"
 #include "debug.h"
+#include "bigint.h"
+#include "support.h"
 
  //Instruction Regist & Global Stack
  unsigned int *prog;

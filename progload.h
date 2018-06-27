@@ -1,6 +1,7 @@
 #ifndef PROGLOAD_H
 #define PROGLOAD_H
 #include "njvm.h"
+#include "support.h"
 
 
 extern int numberOfInstructions;
