@@ -6,7 +6,7 @@
 StackMemory stackPointers;
 int numberOfInstructions;
 int numberOfVariables;
-int version = 5;
+int version = 6;
 
 void *readInProg(FILE *file){
     char format[4];
