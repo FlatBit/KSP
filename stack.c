@@ -10,21 +10,30 @@ int input, output;
 
 ObjRef v1, v2, value;
 
-// Hier StackSlot Unterscheidung
-int pop(void){
+
+// Pop Funktionen für StackSlot, ObjRef und Number
+StackSlot pop(){
     sp--;
     if(sp < 0){
         printf("Error: Stack underflow\n");
         exit(99);
     }
-    int rValue;
     StackSlot ss = stack[sp];
+    return ss;
+}
+
+ObjRef popo(){
+    StackSlot ss = pop();
     if(ss.isObjRef == 1){
-        rValue = ss.u.objRef->data[0];
-    }else{
-        rValue = ss.u.number;
+        return ss.u.objRef;
     }
-    return rValue;
+}
+
+int popn(){
+    StackSlot ss = pop();
+    if(ss.isObjRef == 0){
+        return ss.u.number;
+    }
 }
 
 StackSlot createSsWithObj(ObjRef obj){
@@ -34,13 +43,10 @@ StackSlot createSsWithObj(ObjRef obj){
     return ss;
 }
 
-StackSlot popSS(){
-    sp--;
-    StackSlot ss = stack[sp];
-    return ss;
-}
 
-void pushSS(StackSlot ss){
+// Push Funktionen für StackSlot, ObjRef und Number
+
+void push(StackSlot ss){
     if(sp >= STACK_SIZE){
         printf("Error: Stack overflow\n");
         exit(99);
@@ -49,29 +55,36 @@ void pushSS(StackSlot ss){
     sp++;   
 }
 
-void push(int dataI){
-    char data = (char) dataI;
+void pusho(ObjRef obj){
+    StackSlot ss;
+    ss.isObjRef = 1;
+    ss.u.objRef = obj;
+    push(ss);
+}
+
+void pushco(int dataI){
+    //char data = (char) dataI;
     ObjRef obj = malloc(sizeof(ObjRef));
-    obj->data[0] = data;
-    obj->size = sizeof(data);
+    obj->data[0] = dataI;
+    obj->size = sizeof(dataI);
     StackSlot ss;
     ss.isObjRef = 1;
     ss.u.objRef = obj; 
     pushSS(ss);
 }
 
-void pushN(int value){
-    char data = (char) value;
+void pushn(int value){
     StackSlot ss;
     ss.isObjRef = 0;
-    ss.u.number = data; 
+    ss.u.number = value; 
     pushSS(ss);
 }
 
 /****** Stack Operation *******/
 
 void pushC(int value){
-    push(value);    
+    bigFromInt(value);
+    pusho(bip.res);    
 }
 
 void rdInt(void){
@@ -98,53 +111,43 @@ void wrChr(void){
 
 
 void add(void){
-    v1 = popSS().u.objRef;
-    v2 = popSS().u.objRef;
-    bip.op1 = v1;
-    bip.op2 = v2;
+    bip.op2 = popo();
+    bip.op1 = popo();
     bigAdd();
     value = bip.res;
-    pushSS(createSsWithObj(value));
+    pusho(value);
 }
 
 void sub(void){
-     v1 = popSS().u.objRef;
-    v2 = popSS().u.objRef;
-    bip.op1 = v1;
-    bip.op2 = v2;
+    bip.op2 = popo();
+    bip.op1 = popo();
     bigSub();
     value = bip.res;
-    pushSS(createSsWithObj(value));
+    pusho(value);
 }
 
 void mul(void){
-    v1 = popSS().u.objRef;
-    v2 = popSS().u.objRef;
-    bip.op1 = v1;
-    bip.op2 = v2;
+    bip.op2 = popo();
+    bip.op1 = popo();
     bigMul();
     value = bip.res;
-    pushSS(createSsWithObj(value));
+    pusho(value);
 }
 
 void divS(void){
-    v1 = popSS().u.objRef;
-    v2 = popSS().u.objRef;
-    bip.op1 = v1;
-    bip.op2 = v2;
+    bip.op2 = popo();
+    bip.op1 = popo();
     bigDiv();
     value = bip.res;
-    pushSS(createSsWithObj(value));
+    pusho(value);
 }
 
 void mod(void){
-    v1 = popSS().u.objRef;
-    v2 = popSS().u.objRef;
-    bip.op1 = v1;
-    bip.op2 = v2;
+    bip.op2 = popo();
+    bip.op1 = popo();
     bigDiv();
     value = bip.rem;
-    pushSS(createSsWithObj(value));
+    pusho(value);
 }
 
 
@@ -153,24 +156,24 @@ void mod(void){
 // Stack Fram Operations
 void pushL(int index){
     StackSlot ss = stack[fp + index ];
-    pushSS(ss);
+    push(ss);
 }
 
 // TODO pop() benötigt ObjRef
 void popL(int index){
-   stack[fp + index] = popSS();
+   stack[fp + index] = pop();
 }
 
 //Stack Frame Instructions
 void assignSF(int n){
-    pushN(fp);
+    pushn(fp);
     fp = sp;
     sp = sp + n;
 }
 
 void releaseSF(void){
     sp = fp;
-    fp = pop();
+    fp = popn();
 }
 
 /****StaticDataArea*****/
@@ -178,97 +181,82 @@ void releaseSF(void){
 void pushG(int index){
     if(globalStack && (index >= 0 && index < numberOfInstructions)){
         value = globalStack[index];
-        StackSlot ss;
-        ss.isObjRef = 1;
-        ss.u.objRef = value;
-        pushSS(ss);
+        pusho(value);
     }
 }
 
 // TODO globalStack speichert auch StackSlots
 void popG(int index){
     if(globalStack && (index >= 0 && index < numberOfInstructions)){
-        globalStack[index] = popSS().u.objRef;
+        globalStack[index] = popo();
     }
 }
 
 
 /*****Boolean Operations ****/
 void eq (void){
-    v1 = popSS().u.objRef;
-    v2 = popSS().u.objRef;
-    bip.op1 = v1;
-    bip.op2 = v2;
+    bip.op2 = popo();
+    bip.op1 = popo();
     int res = bigCmp();
     if(res == 0){
-        pushN(1);
+        pushn(1);
     }else{
-        pushN(0);
+        pushn(0);
     }
 }   
 
 void ne (void){
-     v1 = popSS().u.objRef;
-    v2 = popSS().u.objRef;
-    bip.op1 = v1;
-    bip.op2 = v2;
+    bip.op2 = popo();
+    bip.op1 = popo();
     int res = bigCmp();
     if(res != 0){
-        pushN(1);
+        pushn(1);
     }else{
-        pushN(0);
+        pushn(0);
     }
 }   
 
 void lt (void){
-    v1 = popSS().u.objRef;
-    v2 = popSS().u.objRef;
-    bip.op1 = v1;
-    bip.op2 = v2;
+    bip.op2 = popo();
+    bip.op1 = popo();
     int res = bigCmp();
     if(res < 0){
-        pushN(1);
+        pushn(1);
     }else{
-        pushN(0);
+        pushn(0);
     }
 }   
 
 void le (void){
-    v1 = popSS().u.objRef;
-    v2 = popSS().u.objRef;
-    bip.op1 = v1;
-    bip.op2 = v2;
+    bip.op2 = popo();
+    bip.op1 = popo();
     int res = bigCmp();
     if(res <= 0){
-        pushN(1);
+        pushn(1);
     }else{
-        pushN(0);
+        pushn(0);
     }
 }   
 
 void gt (void){
-    v1 = popSS().u.objRef;
-    v2 = popSS().u.objRef;
-    bip.op1 = v1;
-    bip.op2 = v2;
+    bip.op2 = popo();
+    bip.op1 = popo();
     int res = bigCmp();
     if(res >= 0){
-        pushN(1);
+        pushn(1);
     }else{
-        pushN(0);
+        pushn(0);
     }
 }   
 
 void ge (void){
-    v1 = popSS().u.objRef;
-    v2 = popSS().u.objRef;
-    bip.op1 = v1;
-    bip.op2 = v2;
+    bip.op2 = popo();
+    bip.op1 = popo();
     int res = bigCmp();
     if(res >= 0 ){
-        pushN(1);
+        pushn(1);
     }else{
-        pushN(0);
+        pushn(0);
     }
 }   
 
@@ -280,14 +268,14 @@ void jmp (int target){
 }   
 
 void brf (int target){
-    if(!pop()){
+    if(!popn()){
         jump = 1;
         pc = target;
     }
 }   
 
 void brt (int target){
-    if(pop()){
+    if(popn()){
         jump = 1;
         pc = target;
     }
@@ -296,13 +284,13 @@ void brt (int target){
 /****** Instructions Aufgabe 4 ****/
 
 void call(int target){
-    pushN(pc + 1);
+    pushn(pc + 1);
     pc = target;
     jump = 1;
 }
 
 void ret(void){
-    int target = pop();
+    int target = popn();
     pc = target;
     jump = 1;
 } 
@@ -315,21 +303,17 @@ void drop(int n){
 
 void pushr(void){
     ObjRef value = rRegister;
-    StackSlot ss;
-    ss.isObjRef = 1;
-    ss.u.objRef = value;
-    pushSS(ss);
+    pusho(value);
 } 
 
 void popr(void){
-    StackSlot value = popSS();
-    rRegister = value.u.objRef;
+    rRegister = popo();
 } 
 
 void dup(void){
-    int value = pop();
-    push(value);
-    push(value);
+    StackSlot ss = pop();
+    push(ss);
+    push(ss);
 } 
 
 
