@@ -76,7 +76,7 @@ void pushC(int value){
 
 void rdInt(void){
     fscanf(stdin, "%d", &input);
-    pushN(input);
+    push(input);
 }
 
 void wrInt(void){
