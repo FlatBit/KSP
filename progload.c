@@ -44,13 +44,11 @@ void *readInProg(FILE *file){
         exit(99);
     }
     
-    
     if(fread(&numberOfVariables, 4, 1, file) != 1){
         printf("Konnte Zahl der Variablen nicht einlesen.\n");
         exit(99);
     }
-    stackPointers.pVariables = malloc(numberOfVariables * sizeof(ObjRef));
-
+    
     if(fread(ptr, 4, numberOfInstructions, file) != numberOfInstructions){
         printf("Konnte Instruktionen nicht einlesen.\n");
         exit(99);
@@ -65,6 +63,8 @@ StackMemory loadFile(char *path){
         exit(1);
     }
     stackPointers.pInstruction = readInProg(file);
+    stackPointers.pVariables = malloc(numberOfVariables * sizeof(ObjRef));
+
     fclose(file);
     return stackPointers;
 }

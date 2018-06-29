@@ -1,5 +1,7 @@
 #ifndef DEBUG_H
 #define DEBUG_H
+#include "support.h"
+#include "bigint.h"
 
 void debugInterpreter(void);
 extern int *breakpoints;

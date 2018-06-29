@@ -27,16 +27,42 @@ void showStack(void){
             }
             printf("\t --->");
         }
-        printf("\t%04d:\t %d \n", i, stack[i]);
+        // Ueberpruefung ob Objekt Refeerenz
+        if(stack[i].isObjRef){
+            printf("\t%04d: Objekt Referenz: \t %p \n", i, (void*)stack[i].u.objRef);
+        }else{
+            printf("\t%04d:\t %d \n", i, stack[i].u.number);
+        }
+        // Sonst Nummer ausgeben
+        
     }
     printf("\t --- bottom of stack --- \n");
 }
 
 void showData(void){
     for(int i = 0; i < numberOfVariables; i++){
-        printf("data[%04d]: \t %d \n", i, globalStack[i]);
+        //Anzeige der Adressen der ObjRef
+        bip.op1 = globalStack[i];
+        int result = bigToInt();
+        printf("data[%04d]: \t %d \n", i, result);
+        
     }
     printf("\t --- end of data --- \n");
+}
+
+// Anzeige von ObjRef 
+void showObj(){
+    printf("Type Index of Object in Stack:");
+    int index;
+    fscanf(stdin, "%d", &index);
+    if(stack[index].isObjRef){
+        bip.op1 = stack[index].u.objRef;
+        int result = bigToInt();
+        printf("\t%04d: Objekt Inhalt: \t %d \n", index, result);
+    }else{
+        printf("Keine Objekt \n");
+    }
+    
 }
 
 DebugState checkDebugState (const char *str)
@@ -60,6 +86,9 @@ void switchStates(DebugState ds){
             }
             if (!strcmp("data", command)){
                 showData();
+            }
+            if (!strcmp("object", command)){
+                showObj();
             }
         } break;
         case list: {
@@ -104,6 +133,7 @@ void switchStates(DebugState ds){
         default: {}
     }
 }
+
 
 
 void debugInterpreter(void){

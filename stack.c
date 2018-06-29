@@ -24,25 +24,13 @@ StackSlot pop(){
 
 ObjRef popo(){
     StackSlot ss = pop();
-    if(ss.isObjRef == 1){
         return ss.u.objRef;
     }
-}
 
 int popn(){
     StackSlot ss = pop();
-    if(ss.isObjRef == 0){
         return ss.u.number;
     }
-}
-
-StackSlot createSsWithObj(ObjRef obj){
-    StackSlot ss;
-    ss.isObjRef = 1;
-    ss.u.objRef = obj;
-    return ss;
-}
-
 
 // Push Funktionen für StackSlot, ObjRef und Number
 
@@ -62,25 +50,23 @@ void pusho(ObjRef obj){
     push(ss);
 }
 
-void pushco(int dataI){
-    //char data = (char) dataI;
+ObjRef createObj(int dataI){
     ObjRef obj = malloc(sizeof(ObjRef));
     obj->data[0] = dataI;
-    obj->size = sizeof(dataI);
-    StackSlot ss;
-    ss.isObjRef = 1;
-    ss.u.objRef = obj; 
-    pushSS(ss);
+    obj->size = sizeof(dataI); 
+    return obj;
 }
 
 void pushn(int value){
     StackSlot ss;
     ss.isObjRef = 0;
     ss.u.number = value; 
-    pushSS(ss);
+    push(ss);
 }
 
 /****** Stack Operation *******/
+
+
 
 void pushC(int value){
     bigFromInt(value);
@@ -88,22 +74,51 @@ void pushC(int value){
 }
 
 void rdInt(void){
+
+    fflush(stdout);
+    bigRead(stdin);
+    pusho(bip.res);
+    
+    /*
     fscanf(stdin, "%d", &input);
-    push(input);
+    pusho(createObj(input));
+    */
 }
 
 void wrInt(void){
-    output = pop();
+    /*
+    bip.op1 = bip.res;
+    bigPrint(stdout);
+    bigDump(stdout, bip.res);
+    */
+    
+    ObjRef obj = popo();
+    bip.op1 = obj;
+    output = bigToInt();
     printf("%d", output);
+    
 }
 
 void rdChr(void){
+    
+    fflush(stdout);
+    bigRead(stdin);
+    pusho(bip.res);
+    /*
     fscanf(stdin, "%d", &input);
-    push(input);
+    pusho(createObj(input)); 
+    */
 }
 
 void wrChr(void){
-    output = pop();
+    /*
+    bip.op1 = bip.res;
+    bigPrint(stdout);
+    bigDump(stdout, bip.res);
+    */
+    
+    bip.op1 = popo();
+    output = bigToInt();
     printf("%c", output);
 }
 
@@ -179,15 +194,14 @@ void releaseSF(void){
 /****StaticDataArea*****/
 
 void pushG(int index){
-    if(globalStack && (index >= 0 && index < numberOfInstructions)){
+    if(globalStack && (index >= 0 && index < numberOfVariables)){
         value = globalStack[index];
         pusho(value);
     }
 }
 
-// TODO globalStack speichert auch StackSlots
 void popG(int index){
-    if(globalStack && (index >= 0 && index < numberOfInstructions)){
+    if(globalStack && (index >= 0 && index < numberOfVariables)){
         globalStack[index] = popo();
     }
 }
@@ -199,9 +213,11 @@ void eq (void){
     bip.op1 = popo();
     int res = bigCmp();
     if(res == 0){
-        pushn(1);
+        bigFromInt(1);
+        pusho(bip.res);
     }else{
-        pushn(0);
+        bigFromInt(0);
+        pusho(bip.res);
     }
 }   
 
@@ -209,10 +225,13 @@ void ne (void){
     bip.op2 = popo();
     bip.op1 = popo();
     int res = bigCmp();
+    
     if(res != 0){
-        pushn(1);
+        bigFromInt(1);
+        pusho(bip.res);
     }else{
-        pushn(0);
+        bigFromInt(0);
+        pusho(bip.res);
     }
 }   
 
@@ -221,9 +240,11 @@ void lt (void){
     bip.op1 = popo();
     int res = bigCmp();
     if(res < 0){
-        pushn(1);
+        bigFromInt(1);
+        pusho(bip.res);
     }else{
-        pushn(0);
+        bigFromInt(0);
+        pusho(bip.res);
     }
 }   
 
@@ -232,9 +253,11 @@ void le (void){
     bip.op1 = popo();
     int res = bigCmp();
     if(res <= 0){
-        pushn(1);
+        bigFromInt(1);
+        pusho(bip.res);
     }else{
-        pushn(0);
+        bigFromInt(0);
+        pusho(bip.res);
     }
 }   
 
@@ -243,9 +266,11 @@ void gt (void){
     bip.op1 = popo();
     int res = bigCmp();
     if(res >= 0){
-        pushn(1);
+        bigFromInt(1);
+        pusho(bip.res);
     }else{
-        pushn(0);
+        bigFromInt(0);
+        pusho(bip.res);
     }
 }   
 
@@ -254,9 +279,11 @@ void ge (void){
     bip.op1 = popo();
     int res = bigCmp();
     if(res >= 0 ){
-        pushn(1);
+        bigFromInt(1);
+        pusho(bip.res);
     }else{
-        pushn(0);
+        bigFromInt(0);
+        pusho(bip.res);
     }
 }   
 
@@ -268,14 +295,20 @@ void jmp (int target){
 }   
 
 void brf (int target){
-    if(!popn()){
+    bigFromInt(0);
+    bip.op1 = bip.res;
+    bip.op2 = popo();
+    if(bigCmp() == 0){
         jump = 1;
         pc = target;
     }
 }   
 
 void brt (int target){
-    if(popn()){
+    bigFromInt(1);
+    bip.op1 = bip.res;
+    bip.op2 = popo();
+    if(bigCmp() == 0){
         jump = 1;
         pc = target;
     }
