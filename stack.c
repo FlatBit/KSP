@@ -12,7 +12,7 @@ ObjRef v1, v2, value;
 
 
 // Pop Funktionen für StackSlot, ObjRef und Number
-StackSlot pop(){
+StackSlot pop(void){
     sp--;
     if(sp < 0){
         printf("Error: Stack underflow\n");
@@ -22,12 +22,12 @@ StackSlot pop(){
     return ss;
 }
 
-ObjRef popo(){
+ObjRef popo(void){
     StackSlot ss = pop();
         return ss.u.objRef;
     }
 
-int popn(){
+int popn(void){
     StackSlot ss = pop();
         return ss.u.number;
     }
@@ -348,5 +348,19 @@ void dup(void){
     push(ss);
     push(ss);
 } 
+
+/* Operations 7 */
+
+void new(int index){
+    
+}
+
+void getf(int index){
+
+}
+
+void putf(int index){
+    
+}
 
 

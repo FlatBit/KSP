@@ -51,7 +51,7 @@ void showData(void){
 }
 
 // Anzeige von ObjRef 
-void showObj(){
+void showObj(void){
     printf("Type Index of Object in Stack:");
     int index;
     fscanf(stdin, "%d", &index);
