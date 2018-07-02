@@ -9,7 +9,7 @@
 #define STACK_SIZE 1000
 #include "njvm.h"
 #include "bigint.h"
-#include "support.h"
+#include "sup.h"
 
 //Variablen
 extern int sp;
