@@ -1,6 +1,6 @@
 #ifndef NJVM_H
 #define NJVM_H
-#include "support.h"
+#include "sup.h"
 
 /*
 typedef struct{

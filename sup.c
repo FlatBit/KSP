@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 
-#include "support.h"
+#include "sup.h"
 #include "stack.h"
 
 

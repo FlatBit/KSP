@@ -7,7 +7,7 @@
 #include "progload.h"
 #include "debug.h"
 #include "bigint.h"
-#include "support.h"
+#include "sup.h"
 
  //Instruction Regist & Global Stack
  unsigned int *prog;

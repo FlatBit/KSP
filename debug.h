@@ -1,6 +1,6 @@
 #ifndef DEBUG_H
 #define DEBUG_H
-#include "support.h"
+#include "sup.h"
 #include "bigint.h"
 
 void debugInterpreter(void);
