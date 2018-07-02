@@ -2,4 +2,4 @@
 #-I <dir>                Add directory to include search path
 #-L <dir>                Add directory to library search path
 
-gcc -g -Wall -std=c99 -pedantic -L bigint/build/lib -I bigint/build/include -o njvm njvm.c stack.c support.c bigint.c progload.c debug.c -lbigint
+gcc -g -Wall -std=c99 -pedantic -L bigint/build/lib -I bigint/build/include -o njvm njvm.c stack.c support.c  progload.c debug.c -lbigint

@@ -57,7 +57,7 @@ ObjRef createObj(int dataI){
     return obj;
 }
 
-void pushn(int value){
+void pushnr(int value){
     StackSlot ss;
     ss.isObjRef = 0;
     ss.u.number = value; 
@@ -181,7 +181,7 @@ void popL(int index){
 
 //Stack Frame Instructions
 void assignSF(int n){
-    pushn(fp);
+    pushnr(fp);
     fp = sp;
     sp = sp + n;
 }
@@ -317,7 +317,7 @@ void brt (int target){
 /****** Instructions Aufgabe 4 ****/
 
 void call(int target){
-    pushn(pc + 1);
+    pushnr(pc + 1);
     pc = target;
     jump = 1;
 }
@@ -351,16 +351,75 @@ void dup(void){
 
 /* Operations 7 */
 
-void new(int index){
-    
+//create new Object Referenz on the stack
+void new(int numObjRef){
+    ObjRef obj = newCompoundObject(numObjRef);
+    pusho(obj);
 }
 
+//Object on TOS
 void getf(int index){
-
+    ObjRef *elements = GET_REFS(popo());
+    ObjRef field = elements[index];
+    pusho(field);
 }
 
+//Value on TOS and Object below TOS
 void putf(int index){
-    
+    ObjRef data = popo();
+    ObjRef *elements = GET_REFS(popo());
+    elements[index] = data;
+}
+
+/**** Array Operations ****/
+void newa(void){
+    bip.op1 = popo();
+    int arrSize = bigToInt();
+    ObjRef arr = newCompoundObject(arrSize);
+    pusho(arr);
+}
+
+// index is on Stack, not know during compile time
+void getfa(void){
+    bip.op1 = popo();
+    int index = bigToInt();
+    ObjRef *arr = GET_REFS(popo());
+    pusho(arr[index]);
+}
+
+void putfa(void){
+    // data
+    // index
+    // array
+    /*  m[0] = new(Fraction[2]);
+        pushl 0 // m
+        pushc 0 // index
+        pushc 2 
+        newa
+        putfa
+    */
+    ObjRef data = popo();
+    bip.op1 = popo();
+    int index = bigToInt();
+    ObjRef *arr = GET_REFS(popo());
+    arr[index] = data;
 }
 
 
+void getsz(void){
+    int size = GET_SIZE(popo());
+    bigFromInt(size);
+    pusho(bip.res);
+}
+
+void pushn(void){
+
+}
+
+void refeq(void){
+
+}
+
+void refne(void){
+
+}

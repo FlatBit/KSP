@@ -6,7 +6,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 #include "support.h"
+#include "stack.h"
 
 
 /*
@@ -39,6 +41,18 @@ ObjRef newPrimObject(int dataSize) {
   if (objRef == NULL) {
     fatalError("newPrimObject() got no memory");
   }
-  objRef->size = dataSize;
+  objRef->size = dataSize | MSB;
   return objRef;
+}
+
+ObjRef newCompoundObject(int numObjRefs){
+    ObjRef objRef;
+
+    objRef = malloc(sizeof(unsigned int) +
+                    numObjRefs * sizeof(ObjRef));
+    if(objRef == NULL){
+      fatalError("newCompoundObject() got no memory");
+    }
+    objRef->size = numObjRefs | MSB;
+    return objRef;
 }

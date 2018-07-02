@@ -140,7 +140,13 @@ __0:
 // record { Integer num; Integer den; } newFraction(Integer, Integer)
 //
 _newFraction:
+	//Es gibt 4 locale Variablen
+	//local Integer n;
+	//local Interger d;
+	//local Integer g;
+	//local Fraction r;
 	asf	4
+	// Parameter von num
 	pushl	-4
 	pushc	0
 	lt
@@ -173,6 +179,9 @@ __8:
 	drop	2
 	pushr
 	popl	2
+	// Hir wird neue Instanz erzeugt
+	// r = new(Fraction);
+	// r -> popl 3
 	new	2
 	popl	3
 	pushl	-4
@@ -189,9 +198,11 @@ __8:
 	sub
 	pushl	2
 	div
+	// r. num = -n / g;
 	putf	0
 	jmp	__10
 __9:
+	// r.num = n / g;
 	pushl	3
 	pushl	0
 	pushl	2

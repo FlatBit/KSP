@@ -1,6 +1,11 @@
 #ifndef STACK_H
 #define STACK_H
 
+#define GET_REFS(objRef) ((ObjRef *)(objRef)->data)
+#define GET_SIZE(objRef) ((objRef)->size & ~MSB)
+#define MSB (1 << (8 * sizeof(unsigned int) - 1)) 
+#define IS_PRIM(objRef) (((objRef)->size & MSB) == 0)
+
 #define STACK_SIZE 1000
 #include "njvm.h"
 #include "bigint.h"
@@ -45,6 +50,19 @@ void ret(void);
 void drop(int n); 
 void pushr(void); 
 void popr(void); 
-void dup(void); 
+void dup(void);
+void new(int numObjRef);
+void getf(int index);
+void putf(int index);
+void newa(void);
+void getfa(void);
+void putfa(void);
+void getsz(void);
+void pushn(void);
+void refeq(void);
+void refne(void);
+
+
+
 
 #endif

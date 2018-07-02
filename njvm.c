@@ -59,6 +59,16 @@ int execute(int IR){
         case PUSHR: { pushr();} break;
         case POPR:  { popr(); } break;
         case DUP:   { dup(); }  break;
+        case NEW:   { new(IMMEDIATE(IR));}  break;
+        case GETF:  { getf(IMMEDIATE(IR));} break;
+        case PUTF:  { putf(IMMEDIATE(IR));} break;
+        case NEWA:  { newa(); }  break;
+        case GETFA: { getfa(); } break;
+        case PUTFA: { putfa(); } break;
+        case GETSZ: { getsz(); } break;
+        case PUSHN: { pushn(); } break;
+        case REFEQ: { refeq(); } break;
+        case REFNE: { refne(); } break;
 
         default: break;
     }
@@ -119,7 +129,17 @@ int printInstruction(int IR){
         case DROP:  { printf("%04d: \t DROP \t %d \n", pc, IMMEDIATE(IR)); } break;  
         case PUSHR: { printf("%04d: \t PUSHR \t \n", pc); } break; 
         case POPR:  { printf("%04d: \t POPR \t \n", pc); } break;  
-        case DUP:   { printf("%04d: \t DUP \t \n", pc); } break;   
+        case DUP:   { printf("%04d: \t DUP \t \n", pc); } break;
+        case NEW:   {} break;
+        case GETF:  {} break;
+        case PUTF:  {} break;
+        case NEWA:  {} break;
+        case GETFA: {} break;
+        case PUTFA: {} break;
+        case GETSZ: {} break;
+        case PUSHN: {} break;
+        case REFEQ: {} break;
+        case REFNE: {} break;
         default:    break;
     }
 
