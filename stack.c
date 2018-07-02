@@ -405,7 +405,7 @@ void getfa(void){
         fatalError("Objekt nicht initalisiert");
     }
     ObjRef *arr = GET_REFS(obj);
-    if(((index >= GET_SIZE(obj)) | (index < 0)){
+    if((index >= GET_SIZE(obj)) | (index < 0)){
         fatalError("Index out of Bounds!");
     }
     pusho(arr[index]);
@@ -430,7 +430,7 @@ void putfa(void){
         fatalError("Objekt nicht initalisiert");
     }
     ObjRef *arr = GET_REFS(obj);
-    if(((index >= GET_SIZE(obj)) | (index < 0)){
+    if((index >= GET_SIZE(obj)) | (index < 0)){
         fatalError("Index out of Bounds!");
     }
     arr[index] = data;
