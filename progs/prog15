@@ -1,0 +1,21 @@
+type Rechteck = record {
+    Integer hoehe;
+    Integer laenge;
+};
+
+void main(){
+    local Rechteck rect;
+    rect = new(Rechteck);
+    rect.hoehe = 3;
+    rect.laenge = 5;
+    printRect(rect);
+}
+
+void printRect(Rechteck rect){
+    writeCharacter('h');
+    writeInteger(rect.hoehe);
+    writeCharacter('l');
+    writeCharacter('/n');
+    writeInteger(rect.laenge);
+    writeCharacter('/n');
+}
