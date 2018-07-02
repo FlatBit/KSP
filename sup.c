@@ -55,7 +55,7 @@ ObjRef newCompoundObject(int numObjRefs){
     }
     // Auf NULL initalisieren
     ObjRef *objs = GET_REFS(objRef);
-    objs = NULL;
+    *objs = NULL;
   
     objRef->size = numObjRefs | MSB;
     return objRef;

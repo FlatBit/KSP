@@ -3,6 +3,7 @@
 #include "stack.h"
 #include "progload.h"
 
+
 StackSlot stack[STACK_SIZE];
 int sp = 0;
 int fp = 0;
@@ -404,7 +405,7 @@ void getfa(void){
         fatalError("Objekt nicht initalisiert");
     }
     ObjRef *arr = GET_REFS(obj);
-    if(index >= GET_SIZE(obj) | index < 0){
+    if(((index >= GET_SIZE(obj)) | (index < 0)){
         fatalError("Index out of Bounds!");
     }
     pusho(arr[index]);
@@ -429,7 +430,7 @@ void putfa(void){
         fatalError("Objekt nicht initalisiert");
     }
     ObjRef *arr = GET_REFS(obj);
-    if(index >= GET_SIZE(obj) | index < 0){
+    if(((index >= GET_SIZE(obj)) | (index < 0)){
         fatalError("Index out of Bounds!");
     }
     arr[index] = data;
