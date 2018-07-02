@@ -78,7 +78,7 @@ DebugState checkDebugState (const char *str)
 void switchStates(DebugState ds){
     switch(ds){
         case inspect: {
-            printf("DEBUG [inspect]: stack, data? \n");
+            printf("DEBUG [inspect]: stack, data oder object? \n");
             scanf( "%s", command);
             
             if (!strcmp("stack", command)) {
