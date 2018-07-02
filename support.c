@@ -53,6 +53,10 @@ ObjRef newCompoundObject(int numObjRefs){
     if(objRef == NULL){
       fatalError("newCompoundObject() got no memory");
     }
+    // Auf NULL initalisieren
+    ObjRef *objs = GET_REFS(objRef);
+    objs = NULL;
+  
     objRef->size = numObjRefs | MSB;
     return objRef;
 }

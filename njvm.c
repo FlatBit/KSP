@@ -130,16 +130,16 @@ int printInstruction(int IR){
         case PUSHR: { printf("%04d: \t PUSHR \t \n", pc); } break; 
         case POPR:  { printf("%04d: \t POPR \t \n", pc); } break;  
         case DUP:   { printf("%04d: \t DUP \t \n", pc); } break;
-        case NEW:   {} break;
-        case GETF:  {} break;
-        case PUTF:  {} break;
-        case NEWA:  {} break;
-        case GETFA: {} break;
-        case PUTFA: {} break;
-        case GETSZ: {} break;
-        case PUSHN: {} break;
-        case REFEQ: {} break;
-        case REFNE: {} break;
+        case NEW:   { printf("%04d: \t NEW \t %d \n", pc, IMMEDIATE(IR)); } break;
+        case GETF:  { printf("%04d: \t GETF \t %d \n", pc, IMMEDIATE(IR)); } break;
+        case PUTF:  { printf("%04d: \t PUTF \t %d \n", pc, IMMEDIATE(IR)); } break;
+        case NEWA:  { printf("%04d: \t NEWA \t \n", pc); } break;
+        case GETFA: { printf("%04d: \t GETFA \t \n", pc); } break;
+        case PUTFA: { printf("%04d: \t PUTFA \t \n", pc); } break;
+        case GETSZ: { printf("%04d: \t GETSZ \t \n", pc); } break;
+        case PUSHN: { printf("%04d: \t PUSHN \t \n", pc); } break;
+        case REFEQ: { printf("%04d: \t REFEQ \t \n", pc); } break;
+        case REFNE: { printf("%04d: \t REFNE \t \n", pc); } break;
         default:    break;
     }
 
@@ -156,6 +156,15 @@ void listProgramm(void){
         pc = pc + 1;
     }
     pc = apc;
+}
+
+void initalizeToNULL(){
+    bip.op1 = NULL; 
+    bip.op2 = NULL;
+    bip.rem = NULL;
+    bip.res = NULL;
+    rRegister = NULL;
+
 }
 
 
@@ -186,6 +195,10 @@ int main(int argc, char* argv[]){
                 if(stackStruct.pInstruction && stackStruct.pVariables){
                     prog = (unsigned int*)stackStruct.pInstruction;
                     globalStack = stackStruct.pVariables;
+                    // Set GlobalStack to NULL
+                    for(int i = 0; i < numberOfVariables; i++){
+                        globalStack[i] = NULL;
+                    }
                     fileSet = 1;
                 }else{
                     printf("Error: Failed to initlize Instructions\n");
@@ -195,7 +208,7 @@ int main(int argc, char* argv[]){
                 printf("Error: more than one code file specified\n");
                 exit(99);
             }
-            
+            initalizeToNULL();
         }
     }
     printf("Ninja Virtual Machine started\n");

@@ -183,7 +183,15 @@ void popL(int index){
 void assignSF(int n){
     pushnr(fp);
     fp = sp;
+    StackSlot inn;
+    // Initalisiere Local Variables NULL
+        inn.isObjRef = 1;
+        inn.u.objRef = NULL;
+        for(int i = 0; i < n; i++){    
+            stack[fp + i] = inn;
+        }
     sp = sp + n;
+    
 }
 
 void releaseSF(void){
@@ -359,7 +367,11 @@ void new(int numObjRef){
 
 //Object on TOS
 void getf(int index){
-    ObjRef *elements = GET_REFS(popo());
+    ObjRef obj = popo();
+    if(obj == NULL){
+        fatalError("Objekt nicht initalisiert");
+    }
+    ObjRef *elements = GET_REFS(obj);
     ObjRef field = elements[index];
     pusho(field);
 }
@@ -367,7 +379,11 @@ void getf(int index){
 //Value on TOS and Object below TOS
 void putf(int index){
     ObjRef data = popo();
-    ObjRef *elements = GET_REFS(popo());
+    ObjRef obj = popo();
+    if(obj == NULL){
+        fatalError("Objekt nicht initalisiert");
+    }
+    ObjRef *elements = GET_REFS(obj);
     elements[index] = data;
 }
 
@@ -383,7 +399,14 @@ void newa(void){
 void getfa(void){
     bip.op1 = popo();
     int index = bigToInt();
-    ObjRef *arr = GET_REFS(popo());
+    ObjRef obj = popo();
+    if(obj == NULL){
+        fatalError("Objekt nicht initalisiert");
+    }
+    ObjRef *arr = GET_REFS(obj);
+    if(index >= GET_SIZE(obj) | index < 0){
+        fatalError("Index out of Bounds!");
+    }
     pusho(arr[index]);
 }
 
@@ -401,25 +424,60 @@ void putfa(void){
     ObjRef data = popo();
     bip.op1 = popo();
     int index = bigToInt();
-    ObjRef *arr = GET_REFS(popo());
+    ObjRef obj = popo();
+    if(obj == NULL){
+        fatalError("Objekt nicht initalisiert");
+    }
+    ObjRef *arr = GET_REFS(obj);
+    if(index >= GET_SIZE(obj) | index < 0){
+        fatalError("Index out of Bounds!");
+    }
     arr[index] = data;
 }
 
 
 void getsz(void){
-    int size = GET_SIZE(popo());
+    ObjRef obj = popo();
+    if(obj == NULL){
+        fatalError("Objekt nicht initalisiert!");
+    }
+    int size = GET_SIZE(obj);
     bigFromInt(size);
     pusho(bip.res);
 }
 
 void pushn(void){
-
+    pusho(NULL);
 }
 
 void refeq(void){
-
+    ObjRef obj1 = popo();
+    ObjRef obj2 = popo();
+    if((obj1 == NULL) | (obj2 == NULL)){
+        if(obj1 == obj2){
+            bigFromInt(1);
+            pusho(bip.res);
+        }else{
+            bigFromInt(0);
+            pusho(bip.res);
+        }
+    }else{
+        fatalError("Objekte nicht initalisiert!");
+    }
 }
 
 void refne(void){
-
+    ObjRef obj1 = popo();
+    ObjRef obj2 = popo();
+    if((obj1 == NULL) | (obj2 == NULL)){
+        if(obj1 != obj2){
+            bigFromInt(1);
+            pusho(bip.res);
+        }else{
+            bigFromInt(0);
+            pusho(bip.res);
+        }
+    }else{
+        fatalError("Objekte nicht initalisiert!");
+    }
 }
